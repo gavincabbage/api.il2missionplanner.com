@@ -1,16 +1,16 @@
 package main
 
 import (
+	"encoding/json"
+	"flag"
 	"io/ioutil"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
-
-	"encoding/json"
-	"flag"
 )
 
+// TODO this should be part of the config
 var servers = map[string]string{
 	"randomexpert":    "http://72ag-ded.ru/static/il2missionplanner.json",
 	"randomnormal":    "http://72ag-ded.xyz/static/il2missionplanner.json",
@@ -91,11 +91,30 @@ func serverStateHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(marshalApiResponse(unmarshalledBody, ""))
 }
 
+type ApiServer struct {
+	r *mux.Router
+}
+
+func (s *ApiServer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+	// TODO change this to only allow whitelisted origins to protect against CSRF.
+	if origin := req.Header.Get("Origin"); origin != "" {
+		rw.Header().Set("Access-Control-Allow-Origin", origin)
+		rw.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+		rw.Header().Set("Access-Control-Allow-Headers",
+			"Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
+	}
+	if req.Method == "OPTIONS" {
+		return
+	}
+	s.r.ServeHTTP(rw, req)
+}
+
 func main() {
 
 	configFilePath := flag.String("conf", "conf/conf.json", "path to json configuration file")
 	flag.Parse()
 
+	// TODO getting the config from file should be abstracted into its own method
 	rawFileContent, err := ioutil.ReadFile(*configFilePath)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -108,9 +127,10 @@ func main() {
 	hostAndPort := config.Host + ":" + config.Port
 
 	router := mux.NewRouter()
-	router.HandleFunc("/health", healthHandler).Methods("GET")
-	router.HandleFunc("/servers/{server}", serverStateHandler).Methods("GET")
-	router.HandleFunc("/servers", serversHandler).Methods("GET")
+	router.HandleFunc("/health", healthHandler).Methods("GET", "OPTIONS")
+	router.HandleFunc("/servers/{server}", serverStateHandler).Methods("GET", "OPTIONS")
+	router.HandleFunc("/servers", serversHandler).Methods("GET", "OPTIONS")
 	router.NotFoundHandler = http.HandlerFunc(notFoundHandler)
-	log.Fatal(http.ListenAndServe(hostAndPort, router))
+	http.Handle("/", &ApiServer{router})
+	log.Fatal(http.ListenAndServe(hostAndPort, nil))
 }
