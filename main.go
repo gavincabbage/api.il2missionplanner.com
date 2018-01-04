@@ -12,9 +12,10 @@ import (
 
 // TODO this should be part of the config
 var servers = map[string]string{
-	"randomexpert":    "http://72ag-ded.ru/static/il2missionplanner.json",
+	"randomexpert":    "http://72ag-ded.ru:81/static/il2missionplanner.json",
 	"randomnormal":    "http://72ag-ded.xyz/static/il2missionplanner.json",
-	"virtualpilotsfi": "http://ts3.virtualpilots.fi/output.json",
+	"virtualpilotsfi": "http://ts3.virtualpilots.fi:8000/static/output.json",
+	"taw":             "http://taw-server.de/map/taw_map.json",
 }
 
 type Config struct {
@@ -109,12 +110,7 @@ func (s *ApiServer) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	s.r.ServeHTTP(rw, req)
 }
 
-func main() {
-
-	configFilePath := flag.String("conf", "conf/conf.json", "path to json configuration file")
-	flag.Parse()
-
-	// TODO getting the config from file should be abstracted into its own method
+func readConfigFile(configFilePath *string) *Config {
 	rawFileContent, err := ioutil.ReadFile(*configFilePath)
 	if err != nil {
 		log.Fatal(err.Error())
@@ -124,7 +120,17 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
+	return config
+}
+
+func main() {
+
+	configFilePath := flag.String("conf", "conf/conf.json", "path to json configuration file")
+	flag.Parse()
+
+	config := readConfigFile(configFilePath)
 	hostAndPort := config.Host + ":" + config.Port
+	log.Println("Host:", config.Host, "Port:", config.Port)
 
 	router := mux.NewRouter()
 	router.HandleFunc("/health", healthHandler).Methods("GET", "OPTIONS")
