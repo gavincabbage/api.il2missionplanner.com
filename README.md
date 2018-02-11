@@ -14,9 +14,9 @@ contribute back. The code is under the MIT license, so you can basically do what
 
 ## Development Setup
 
-To run locally, just run `go run *.go` from the main directory of the repository.
-
-To run the unit tests, run `go test`.
+To run locally, `make` or `make develop` from inside the repository. 
+Run `make test` to run both unit and integration tests, and `make unit` or `make integration`, respectively,
+to run each type of test. Integration tests are run using Postman's CLI `newman`.
 
 ## Contact
 
