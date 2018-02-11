@@ -2,6 +2,7 @@
   "env" : "prod",
   "host" : "0.0.0.0",
   "port" : "8080",
+  "roomTtl" : 10800,
   "servers": {
     "randomexpert":    "http://72ag-ded.ru:81/static/il2missionplanner.json",
     "randomnormal":    "http://72ag-ded.xyz/static/il2missionplanner.json",

@@ -2,7 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/gavincabbage/api.il2missionplanner.com/src/config"
+	"github.com/gavincabbage/api.il2missionplanner.com/config"
 	"net/http"
 )
 
@@ -11,7 +11,7 @@ func HealthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, string(marshalApiResponse("", "not found")), 404)
+	http.Error(w, string(marshalApiResponse("", "not found")), http.StatusNotFound)
 }
 
 func ConfigHandler(w http.ResponseWriter, r *http.Request) {

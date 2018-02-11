@@ -2,8 +2,9 @@ package main
 
 import (
 	"flag"
-	"github.com/gavincabbage/api.il2missionplanner.com/src/config"
-	"github.com/gavincabbage/api.il2missionplanner.com/src/handlers"
+	"github.com/gavincabbage/api.il2missionplanner.com/config"
+	"github.com/gavincabbage/api.il2missionplanner.com/handlers"
+	"github.com/gavincabbage/api.il2missionplanner.com/server"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -24,6 +25,6 @@ func main() {
 	router.HandleFunc("/servers", handlers.ServersHandler).Methods("GET", "OPTIONS")
 
 	router.NotFoundHandler = http.HandlerFunc(handlers.NotFoundHandler)
-	http.Handle("/", &Server{router, config})
+	http.Handle("/", &server.Server{router, config})
 	log.Fatal(http.ListenAndServe(config.Host+":"+config.Port, nil))
 }

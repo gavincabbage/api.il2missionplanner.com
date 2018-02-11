@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/gavincabbage/api.il2missionplanner.com/src/config"
-	"github.com/gavincabbage/api.il2missionplanner.com/src/models"
+	"github.com/gavincabbage/api.il2missionplanner.com/config"
+	"github.com/gavincabbage/api.il2missionplanner.com/models"
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"net/http"

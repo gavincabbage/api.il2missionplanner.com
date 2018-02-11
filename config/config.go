@@ -17,12 +17,12 @@ type Config struct {
 func FromFile(configFilePath *string) *Config {
 	rawFileContent, err := ioutil.ReadFile(*configFilePath)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal("problem reading config file", err.Error())
 	}
 	config := &Config{}
 	err = json.Unmarshal(rawFileContent, config)
 	if err != nil {
-		log.Fatal(err.Error())
+		log.Fatal("problem parsing config file", err.Error())
 	}
 	return config
 }
