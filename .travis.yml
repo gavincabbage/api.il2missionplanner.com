@@ -3,6 +3,10 @@ language: go
 go:
   1.9.x
 
+install:
+  - go get github.com/gorilla/mux
+  - go get github.com/gorilla/websocket
+
 deploy:
   - provider: s3
     access_key_id: AKIAIVOD3WGLQHXFCTTQ
