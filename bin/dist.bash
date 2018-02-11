@@ -13,6 +13,7 @@ OUT=api.il2missionplanner.com.v${VERSION}.${TIMESTAMP}.out
 
 mkdir -p dist
 go build -o ./dist/${OUT} -ldflags "-X main.version=${VERSION}" main.go
-shasum ./dist/${OUT} > ./dist/${OUT}.sha256
+cd ./dist/ # go into dir to keep hash file free of "./dist/"
+shasum ${OUT} > ${OUT}.sha256
 
 exit 0
