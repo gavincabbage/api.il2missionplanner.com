@@ -1,26 +1,20 @@
 language: go
-
-go:
-  1.9.x
-
+go: 1.9.x
 install:
-  - go get github.com/gorilla/mux
-  - go get github.com/gorilla/websocket
-  - npm install newman -g
-
+- go get github.com/gorilla/mux
+- go get github.com/gorilla/websocket
+- npm install newman -g
 script:
-  - make dist
-
+- make dist
 deploy:
-  - provider: s3
-    access_key_id: AKIAIVOD3WGLQHXFCTTQ
-    secret_access_key:
-      secure: ZWodfMkB+A7HV3VyuHeGfSneo/liHAFDwtQpesSULoMXIWrsX+PRQcQC5rMv5GU0/ianfCYrP3cSfR6bhWKPvQ1X34UNiIuTTsAb/sKA+kQPAClOIxPZEUGEVcOGRnBjfXja2d/gdCySgAosMMaUK8h7boOOmAeS9zP8gc3g+NcZlWPvQS/3uBUFcRia+EZ3j5zaxHDHTYAl5m9Pq2kfONMtS+Q9ukO2LU2WFx5hB2y2kYwKhlk3VBRoneAf9P0U6RWfDvO3xCpQwDBep9tLPsrc3YUskxfzjosaSBARfpImxvwdUh/CV9wdOBsW4ECYVn0NTjRqQsNB6eAyRvjSszZ3/WYB59GmNJt2iW/KQqGPIex+SbIOYGAbvj8B+QqBafLhc5jjvnFC79okpPfrc3eScs4asnUicLSM8l9Yryf63dFk/y0C/xiIh4h39EwZRy8mNHlV+qloUheR8WCxKU8rKZ8ag06akWtX7Wk8zaIK68aAhm6suZMnuehb9K9VDEfVkzC4BExabvAM1hKEXxVWcEYUOPkw6fCvjVru9lpHwovDjzEhTHJpY9znJkms6NlifdCjKJtpyejKVLjnX3CDIsBXGmHpNXowRiocHFalbI2RzEDY1g3ylKZLhoFvV/PwogDNzt260/5cUhcbUKJ4syrkKu7br4riBusoZvc=
-    bucket: artifacts.gavincabbage.com
-    acl: public_read
-    local_dir: dist
-    skip_cleanup: true
-    on:
-      branch: message-bus
-      repo: gavincabbage/api.il2missionplanner.com
-
+  provider: s3
+  access_key_id: AKIAIURNESGKCXTWDFKA
+  secret_access_key:
+    secure: PrL0Ex14GnPUCFq8+h5mNBFfXs67TF38VTHjZkg5NDl/21CMC5dbV8K8psy2CcAb0SsXr9WyJWZgTdr3k/ZWlRvAjtAUwA7YNSWh8hGUefey9w6TjJWvDEQcPNgyFZiIl7ImlRYnfO/twmiiqR3gpY4Hs72N0qSSboQBNm3qlUArnLnVIA6vLa6J1TfqsGenF5b4NUO016TxkeoyqMy9BQ4UEo5odOv3JgNSRwvyXBz904KhVudTFyGg5Y8IWT5VWqhFhyS7gZ5VFRZ6n1kCsZAzh++vM3Hfxol29H8+0PYXwhjwL42hLXWm8zbMCAUy1GyEKLEnMsYh7tLHQ1uhN3mRQemgQd2yCJ/wfhtzGO7vHPyVYWLjg/tr2ChDMMFjyIn7adPwxOCMNwmx1xGdkWYzESeE4BdWX2sDACDunLL8uPATFg6zni6/7vyzefgGVFg5T6QgvEojdmayewd61pKzJFpsiT6aKu+tkELE4s6YT3i/t/cLTX7sFDngcnD6YUboQTaLvNMXOX44TJ6AR+9Bo1Gj5oq25ElY5uvlgMBsyrWhqv6w0/GARjvWYG5DwurlJOX62WlSC5+qW4ON82gvk92HBTJAE4/OQiOCGie5alTlIyTaBthGy740/2sMVGPaNV6R9EDuAr1zSxlR3E4p6qR8qNfLgyFHbP+VDhs=
+  bucket: artifacts.gavincabbage.com
+  local-dir: dist
+  upload-dir: api.il2missionplanner.com
+  acl: public_read
+  on:
+    repo: gavincabbage/api.il2missionplanner.com
+    branch: message-bus

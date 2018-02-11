@@ -48,6 +48,7 @@ func buildMockResponseAndRequest(method string, path string, t *testing.T) (*htt
 	}
 	mockRequest = mockRequest.WithContext(context.WithValue(mockRequest.Context(), "config", mock.Config()))
 	mockRequest = mux.SetURLVars(mockRequest, map[string]string{"server": "testserver"})
+
 	mockResponse := httptest.NewRecorder()
 	return mockResponse, mockRequest
 }
