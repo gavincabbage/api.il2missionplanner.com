@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+
 tag=$(git tag | tail -1)
 commit=$(git rev-parse HEAD)
 version=${tag}.${commit: -8}
