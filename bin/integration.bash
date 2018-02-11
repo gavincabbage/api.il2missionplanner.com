@@ -4,7 +4,7 @@
 set -x
 
 go run -ldflags "-X main.version=integration" main.go &
-sleep 2
+sleep 5
 lsof_out=$(lsof -i :9999 -Fp | head -1)
 api_pid=${lsof_out: 1}
 echo "API PID: ${api_pid}"
