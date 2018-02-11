@@ -14,6 +14,7 @@ deploy:
   bucket: artifacts.gavincabbage.com
   local-dir: dist
   upload-dir: api.il2missionplanner.com
+  skip_cleanup: true
   acl: public_read
   on:
     repo: gavincabbage/api.il2missionplanner.com
