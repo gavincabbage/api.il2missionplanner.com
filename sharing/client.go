@@ -31,9 +31,9 @@ var upgrader = websocket.Upgrader{
 	WriteBufferSize: 1024,
 }
 
-// Client is a middleman between the websocket connection and the Hub.
+// Client is a middleman between the websocket connection and the Room.
 type Client struct {
-	Hub *Hub
+	Hub *Room
 
 	// The websocket connection.
 	Conn *websocket.Conn
@@ -42,7 +42,7 @@ type Client struct {
 	Send chan []byte
 }
 
-// ReadPump pumps messages from the websocket connection to the Hub.
+// ReadPump pumps messages from the websocket connection to the Room.
 //
 // The application runs ReadPump in a per-connection goroutine. The application
 // ensures that there is at most one reader on a connection by executing all
@@ -68,7 +68,7 @@ func (c *Client) ReadPump() {
 	}
 }
 
-// WritePump pumps messages from the Hub to the websocket connection.
+// WritePump pumps messages from the Room to the websocket connection.
 //
 // A goroutine running WritePump is started for each connection. The
 // application ensures that there is at most one writer to a connection by
@@ -84,7 +84,7 @@ func (c *Client) WritePump() {
 		case message, ok := <-c.Send:
 			c.Conn.SetWriteDeadline(time.Now().Add(writeWait))
 			if !ok {
-				// The Hub closed the channel.
+				// The Room closed the channel.
 				c.Conn.WriteMessage(websocket.CloseMessage, []byte{})
 				return
 			}

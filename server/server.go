@@ -16,7 +16,7 @@ var Version string
 type Server struct {
 	Router *mux.Router
 	Config *config.Config
-	Hubs   *map[string]*sharing.Hub
+	Hubs   *map[string]*sharing.Room
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {

@@ -3,6 +3,8 @@
 
 set -x
 
+git fetch --tags
+
 TAG=$(git tag | tail -1)
 COMMIT=$(git rev-parse HEAD)
 VERSION=${TAG}.${COMMIT: -8}

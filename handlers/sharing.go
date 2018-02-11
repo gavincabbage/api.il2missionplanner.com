@@ -20,7 +20,7 @@ func SharingHandler(w http.ResponseWriter, r *http.Request) {
 	if hub, exists := (*hubs)[room]; exists {
 		serveWs(hub, w, r)
 	} else {
-		hub := sharing.NewHub()
+		hub := sharing.NewRoom()
 		go hub.Run()
 		(*hubs)[room] = hub
 		serveWs(hub, w, r)
@@ -32,7 +32,7 @@ func SharingHtmlHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./sharing/home.html")
 }
 
-func serveWs(hub *sharing.Hub, w http.ResponseWriter, r *http.Request) {
+func serveWs(hub *sharing.Room, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -44,6 +44,6 @@ func serveWs(hub *sharing.Hub, w http.ResponseWriter, r *http.Request) {
 	client.ReadPump()
 }
 
-func fromRequestContext(r *http.Request) *map[string]*sharing.Hub {
-	return r.Context().Value("hubs").(*map[string]*sharing.Hub)
+func fromRequestContext(r *http.Request) *map[string]*sharing.Room {
+	return r.Context().Value("hubs").(*map[string]*sharing.Room)
 }

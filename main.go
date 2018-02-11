@@ -27,7 +27,7 @@ func main() {
 	router.HandleFunc("/ws/{room}", handlers.SharingHandler).Methods("GET", "OPTIONS")
 	router.HandleFunc("/dev/sharing", handlers.SharingHtmlHandler).Methods("GET", "OPTIONS")
 
-	hubs := make(map[string]*sharing.Hub)
+	hubs := make(map[string]*sharing.Room)
 
 	router.NotFoundHandler = http.HandlerFunc(handlers.NotFoundHandler)
 	http.Handle("/", &server.Server{router, config, &hubs})

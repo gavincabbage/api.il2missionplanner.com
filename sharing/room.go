@@ -1,8 +1,8 @@
 package sharing
 
-// Hub maintains the set of active Clients and broadcasts messages to the
+// Room maintains the set of active Clients and broadcasts messages to the
 // Clients.
-type Hub struct {
+type Room struct {
 	// Registered Clients.
 	Clients map[*Client]bool
 
@@ -16,8 +16,8 @@ type Hub struct {
 	Unregister chan *Client
 }
 
-func NewHub() *Hub {
-	return &Hub{
+func NewRoom() *Room {
+	return &Room{
 		Broadcast:  make(chan []byte),
 		Register:   make(chan *Client),
 		Unregister: make(chan *Client),
@@ -25,7 +25,7 @@ func NewHub() *Hub {
 	}
 }
 
-func (h *Hub) Run() {
+func (h *Room) Run() {
 	for {
 		select {
 		case client := <-h.Register:

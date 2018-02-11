@@ -42,6 +42,10 @@ window.onload = function () {
     };
 
     document.getElementById("connectform").onsubmit = function () {
+        if (conn) {
+            console.log("closing");
+            conn.close();
+        }
         console.log("HERE A: " + room.value);
         if (!room.value) {
             return false;
@@ -49,6 +53,7 @@ window.onload = function () {
         var connectionString = "ws://127.0.0.1:9999/ws/" + room.value;
         console.log("HERE B: " + connectionString);
         conn = new WebSocket(connectionString);
+        conn.Cl
         conn.onclose = function (evt) {
             var item = document.createElement("div");
             item.innerHTML = "<b>Connection closed</b>";
