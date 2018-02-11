@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"github.com/gavincabbage/api.il2missionplanner.com/mock"
+	"github.com/gorilla/mux"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -40,11 +41,13 @@ func testHandler(method string, path string, expectedStatus int, expectedBody st
 }
 
 func buildMockResponseAndRequest(method string, path string, t *testing.T) (*httptest.ResponseRecorder, *http.Request) {
+
 	mockRequest, err := http.NewRequest(method, path, nil)
-	mockRequest = mockRequest.WithContext(context.WithValue(mockRequest.Context(), "config", mock.Config()))
 	if err != nil {
 		t.Fatal(err)
 	}
+	mockRequest = mockRequest.WithContext(context.WithValue(mockRequest.Context(), "config", mock.Config()))
+	mockRequest = mux.SetURLVars(mockRequest, map[string]string{"server": "testserver"})
 	mockResponse := httptest.NewRecorder()
 	return mockResponse, mockRequest
 }

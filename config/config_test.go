@@ -7,7 +7,7 @@ import (
 )
 
 func TestFromFile(t *testing.T) {
-	// TODO How to mock ioutil file read?
+	// TODO Mock ioutil file read
 }
 
 func TestFromRequestContext(t *testing.T) {

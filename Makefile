@@ -1,21 +1,19 @@
 SHELL := bash
 .ONESHELL:
 
-build: main.go $(wildcard **/*.go)
-	TAG=$$(git tag | tail -1)
-	COMMIT=$$(git rev-parse HEAD)
-	VERSION=$${TAG}.$${COMMIT: -8}
-	TIMESTAMP=$$(date +%s)
-	OUT=api.il2missionplanner.com.v$${VERSION}.$${TIMESTAMP}.out
-	mkdir dist
-	go build -o ./dist/$${OUT} -ldflags "-X main.version=$${VERSION}" main.go
-	shasum $${OUT} > ./dist/$${OUT}.sha256
-
 develop:
-	go run main.go
+	go run -ldflags "-X main.version=develop" main.go
 
-test:
+test: unit integration
+
+unit:
 	go test . ./config ./handlers ./server -cover -v
+
+integration:
+	./bin/integration.bash
+
+dist: main.go $(wildcard **/*.go) test
+	./bin/dist.bash
 
 clean:
 	rm -rf ./dist/

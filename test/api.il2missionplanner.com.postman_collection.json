@@ -1,0 +1,113 @@
+{
+	"variables": [],
+	"info": {
+		"name": "api.il2missionplanner.com",
+		"_postman_id": "a2490a3b-c2ed-f17b-3527-2d7a18295c44",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Response data is \\'OK\\'\"] = jsonData.data === \"OK\";",
+							"",
+							""
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{protocol}}{{host}}:{{port}}/health",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Servers List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Response error is empty\"] = jsonData.error === \"\";",
+							"tests[\"Response data contains TAW server\"] = responseBody.has(\"taw\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{protocol}}{{host}}:{{port}}/servers",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Server TAW",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Response error is empty\"] = jsonData.error === \"\";",
+							"tests[\"Response data contains map hash\"] = responseBody.has(\"mapHash\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{protocol}}{{host}}:{{port}}/servers/taw",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Config",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							"var jsonData = JSON.parse(responseBody);",
+							"tests[\"Response error is empty\"] = jsonData.error === \"\";",
+							"tests[\"Response data env is set to \\'local\\'\"] = jsonData.data.env === \"local\";",
+							"tests[\"Response data contains server list\"] = responseBody.has(\"servers\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "{{protocol}}{{host}}:{{port}}/config",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

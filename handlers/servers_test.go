@@ -11,6 +11,5 @@ func TestServersHandlerHandler(t *testing.T) {
 }
 
 func TestServerStateHandlerHandler(t *testing.T) {
-	// TODO Improve API body comparison
-	testHandler("GET", "/servers/testserver", http.StatusOK, "", ServerStateHandler, t)
+	// TODO Mock downstream http request
 }
