@@ -3,7 +3,9 @@ package server
 import (
 	"context"
 	"github.com/gavincabbage/api.il2missionplanner.com/config"
+	"github.com/gavincabbage/api.il2missionplanner.com/sharing"
 	"github.com/gorilla/mux"
+	"log"
 	"net/http"
 )
 
@@ -14,9 +16,17 @@ var Version string
 type Server struct {
 	Router *mux.Router
 	Config *config.Config
+	Hubs   *map[string]*sharing.Hub
 }
 
 func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+
+	log.Println(r.RequestURI)
+
+	if upgrade := r.Header.Get("Upgrade"); upgrade == "websocket" {
+		log.Println("websocket upgrade request")
+		r = r.WithContext(context.WithValue(r.Context(), "hubs", s.Hubs))
+	}
 
 	// Set some headers to allow requests from anywhere. If we had any sort of user authentication going on
 	// this might open us up to CSRF etc. but we don't, and in general I intend for this API to be public.
@@ -40,4 +50,5 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	s.Router.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), "config", s.Config)))
+
 }

@@ -46,7 +46,7 @@ window.onload = function () {
         if (!room.value) {
             return false;
         }
-        var connectionString = "ws://" + document.location.host + "/ws/" + room.value;
+        var connectionString = "ws://127.0.0.1:9999/ws/" + room.value;
         console.log("HERE B: " + connectionString);
         conn = new WebSocket(connectionString);
         conn.onclose = function (evt) {
