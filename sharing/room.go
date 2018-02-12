@@ -1,31 +1,29 @@
 package sharing
 
-// Room maintains the set of active Clients and broadcasts messages to the
-// Clients.
+import (
+	"github.com/gavincabbage/api.il2missionplanner.com/models"
+	"go/doc"
+)
+
 type Room struct {
-	// Registered Clients.
-	Clients map[*Client]bool
-
-	// Inbound messages from the Clients.
-	Broadcast chan []byte
-
-	// Register requests from the Clients.
-	Register chan *Client
-
-	// Unregister requests from Clients.
-	Unregister chan *Client
+	Clients     map[*Client]bool
+	Broadcast   chan []byte
+	Register    chan *Client
+	Unregister  chan *Client
+	MissionPlan *models.Plan
 }
 
 func NewRoom() *Room {
 	return &Room{
-		Broadcast:  make(chan []byte),
-		Register:   make(chan *Client),
-		Unregister: make(chan *Client),
-		Clients:    make(map[*Client]bool),
+		Broadcast:   make(chan []byte),
+		Register:    make(chan *Client),
+		Unregister:  make(chan *Client),
+		Clients:     make(map[*Client]bool),
+		MissionPlan: &models.Plan{},
 	}
 }
 
-func (h *Room) Run() {
+func (h *Room) Start() {
 	for {
 		select {
 		case client := <-h.Register:

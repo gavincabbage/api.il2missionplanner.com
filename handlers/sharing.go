@@ -21,7 +21,7 @@ func SharingHandler(w http.ResponseWriter, r *http.Request) {
 		serveWs(hub, w, r)
 	} else {
 		hub := sharing.NewRoom()
-		go hub.Run()
+		go hub.Start()
 		(*hubs)[room] = hub
 		serveWs(hub, w, r)
 	}
@@ -38,10 +38,10 @@ func serveWs(hub *sharing.Room, w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 		return
 	}
-	client := &sharing.Client{Hub: hub, Conn: conn, Send: make(chan []byte, 256)}
-	client.Hub.Register <- client
-	go client.WritePump()
-	client.ReadPump()
+	client := &sharing.Client{Room: hub, Conn: conn, Send: make(chan []byte, 256)}
+	client.Room.Register <- client
+	go client.WriteMessages()
+	client.ReadMessages()
 }
 
 func fromRequestContext(r *http.Request) *map[string]*sharing.Room {

@@ -8,17 +8,11 @@ import (
 )
 
 const (
-	// Time allowed to write a message to the peer.
-	writeWait = 10 * time.Second
-
-	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
-
-	// Send pings to peer with this period. Must be less than pongWait.
-	pingPeriod = (pongWait * 9) / 10
-
-	// Maximum message size allowed from peer.
-	maxMessageSize = 512
+	writeWait           = 10 * time.Second
+	pongWait            = 60 * time.Second
+	pingPeriod          = (pongWait * 9) / 10
+	maxMessageSize      = 2056
+	websocketBufferSize = 1024
 )
 
 var (
@@ -27,53 +21,46 @@ var (
 )
 
 var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
+	ReadBufferSize:  websocketBufferSize,
+	WriteBufferSize: websocketBufferSize,
 }
 
 // Client is a middleman between the websocket connection and the Room.
 type Client struct {
-	Hub *Room
-
-	// The websocket connection.
+	Room *Room
 	Conn *websocket.Conn
-
-	// Buffered channel of outbound messages.
 	Send chan []byte
 }
 
-// ReadPump pumps messages from the websocket connection to the Room.
-//
-// The application runs ReadPump in a per-connection goroutine. The application
-// ensures that there is at most one reader on a connection by executing all
-// reads from this goroutine.
-func (c *Client) ReadPump() {
+// ReadMessages pumps messages from the websocket connection to the Room.
+func (c *Client) ReadMessages() {
 	defer func() {
-		c.Hub.Unregister <- c
+		c.Room.Unregister <- c
 		c.Conn.Close()
 	}()
-	c.Conn.SetReadLimit(maxMessageSize)
-	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
-	c.Conn.SetPongHandler(func(string) error { c.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	c.configureWebsocketConn()
 	for {
 		_, message, err := c.Conn.ReadMessage()
 		if err != nil {
-			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
-				log.Printf("error: %v", err)
-			}
+			log.Printf("websocket error: %v", err)
 			break
 		}
 		message = bytes.TrimSpace(bytes.Replace(message, newline, space, -1))
-		c.Hub.Broadcast <- message
+		c.Room.Broadcast <- message
 	}
 }
 
-// WritePump pumps messages from the Room to the websocket connection.
-//
-// A goroutine running WritePump is started for each connection. The
-// application ensures that there is at most one writer to a connection by
-// executing all writes from this goroutine.
-func (c *Client) WritePump() {
+func (c *Client) configureWebsocketConn() {
+	c.Conn.SetReadLimit(maxMessageSize)
+	c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+	c.Conn.SetPongHandler(func(string) error {
+		c.Conn.SetReadDeadline(time.Now().Add(pongWait))
+		return nil
+	})
+}
+
+// WriteMessages pumps messages from the Room to the websocket connection.
+func (c *Client) WriteMessages() {
 	ticker := time.NewTicker(pingPeriod)
 	defer func() {
 		ticker.Stop()
@@ -95,7 +82,7 @@ func (c *Client) WritePump() {
 			}
 			w.Write(message)
 
-			// Add queued chat messages to the current websocket message.
+			// Add queued messages to the current websocket message.
 			n := len(c.Send)
 			for i := 0; i < n; i++ {
 				w.Write(newline)
