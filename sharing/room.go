@@ -2,7 +2,6 @@ package sharing
 
 import (
 	"github.com/gavincabbage/api.il2missionplanner.com/models"
-	"go/doc"
 )
 
 type Room struct {

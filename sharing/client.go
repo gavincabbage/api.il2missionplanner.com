@@ -8,22 +8,16 @@ import (
 )
 
 const (
-	writeWait           = 10 * time.Second
-	pongWait            = 60 * time.Second
-	pingPeriod          = (pongWait * 9) / 10
-	maxMessageSize      = 2056
-	websocketBufferSize = 1024
+	writeWait      = 10 * time.Second
+	pongWait       = 60 * time.Second
+	pingPeriod     = (pongWait * 9) / 10
+	maxMessageSize = 2056
 )
 
 var (
 	newline = []byte{'\n'}
 	space   = []byte{' '}
 )
-
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  websocketBufferSize,
-	WriteBufferSize: websocketBufferSize,
-}
 
 // Client is a middleman between the websocket connection and the Room.
 type Client struct {
