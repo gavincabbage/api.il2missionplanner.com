@@ -10,9 +10,11 @@ import (
 )
 
 var servers = map[string]string{
-    "randomexpert": "http://72ag-ded.ru/static/il2missionplanner.json",
-    "randomnormal": "http://72ag-ded.xyz/static/il2missionplanner.json",
-    "virtualpilotsfi": "http://ts3.virtualpilots.fi/output.json",
+	"randomexpert":    "http://72ag-ded.ru/static/il2missionplanner.json",
+	"randomnormal":    "http://72ag-ded.xyz/static/il2missionplanner.json",
+	"virtualpilotsfi": "http://ts3.virtualpilots.fi/output.json",
+	"coconutexpert":   "http://coconutside.eu:8083/campaign/Expert",
+	"coconutnormal":   "http://coconutside.eu:8083/campaign/Normal",
 }
 
 func serveHome(w http.ResponseWriter, r *http.Request) {
@@ -20,16 +22,16 @@ func serveHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveServerState(w http.ResponseWriter, r *http.Request) {
-    server := mux.Vars(r)["server"]
-    url := servers[server]
+	server := mux.Vars(r)["server"]
+	url := servers[server]
 
-	response, err := http.Get(url);
-    if err != nil {
+	response, err := http.Get(url)
+	if err != nil {
 		log.Fatal("ERROR getting random expert data: ", err)
 	}
 	defer response.Body.Close()
-	body, err := ioutil.ReadAll(response.Body);
-    if err != nil {
+	body, err := ioutil.ReadAll(response.Body)
+	if err != nil {
 		log.Fatal("ERROR reading random expert response body", err)
 	}
 	w.Write(body)
