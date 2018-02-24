@@ -16,29 +16,24 @@ var upgrader = websocket.Upgrader{
 func SharingHandler(w http.ResponseWriter, r *http.Request) {
 	r.Header.Del("Origin")
 	hubs := fromRequestContext(r)
-	room := mux.Vars(r)["room"]
-	if hub, exists := (*hubs)[room]; exists {
+	roomName := mux.Vars(r)["roomName"]
+	if hub, exists := (*hubs)[roomName]; exists {
 		serveWs(hub, w, r)
 	} else {
-		hub := sharing.NewRoom()
-		go hub.Start()
-		(*hubs)[room] = hub
-		serveWs(hub, w, r)
+		room := sharing.NewRoom()
+		go room.Start()
+		(*hubs)[roomName] = room
+		serveWs(room, w, r)
 	}
 }
 
-func SharingHtmlHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	http.ServeFile(w, r, "./sharing/home.html")
-}
-
-func serveWs(hub *sharing.Room, w http.ResponseWriter, r *http.Request) {
+func serveWs(room *sharing.Room, w http.ResponseWriter, r *http.Request) {
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	client := &sharing.Client{Room: hub, Conn: conn, Send: make(chan []byte, 256)}
+	client := &sharing.Client{Room: room, Conn: conn, Send: make(chan []byte, 256)}
 	client.Room.Register <- client
 	go client.WriteMessages()
 	client.ReadMessages()
@@ -46,4 +41,9 @@ func serveWs(hub *sharing.Room, w http.ResponseWriter, r *http.Request) {
 
 func fromRequestContext(r *http.Request) *map[string]*sharing.Room {
 	return r.Context().Value("hubs").(*map[string]*sharing.Room)
+}
+
+func SharingHtmlHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/html")
+	http.ServeFile(w, r, "./sharing/home.html")
 }
