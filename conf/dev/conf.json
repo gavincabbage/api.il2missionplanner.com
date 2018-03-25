@@ -7,6 +7,8 @@
     "randomexpert":    "http://72ag-ded.ru:81/static/il2missionplanner.json",
     "randomnormal":    "http://72ag-ded.xyz/static/il2missionplanner.json",
     "virtualpilotsfi": "http://ts3.virtualpilots.fi:8000/static/output.json",
-    "taw":             "http://taw-server.de/map/taw_map.json"
+    "taw":             "http://taw-server.de/map/taw_map.json",
+    "coconutexpert":   "http://coconutside.eu:8083/campaign/Expert",
+    "coconutnormal":   "http://coconutside.eu:8083/campaign/Normal"
   }
 }
