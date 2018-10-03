@@ -9,6 +9,7 @@
     "virtualpilotsfi": "http://ts3.virtualpilots.fi:8000/static/output.json",
     "taw":             "http://taw-server.de/map/taw_map.json",
     "coconutexpert":   "http://coconutside.eu:8083/campaign/Expert",
-    "coconutnormal":   "http://coconutside.eu:8083/campaign/Normal"
+    "coconutnormal":   "http://coconutside.eu:8083/campaign/Normal",
+    "obt":             "http://obt.myddns.me:8083/campaign/Open-Bar-Team"
   }
 }
