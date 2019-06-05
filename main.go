@@ -14,7 +14,12 @@ import (
 var servers = map[string]string{
 	"randomexpert":    "http://72ag-ded.ru/static/il2missionplanner.json",
 	"randomnormal":    "http://72ag-ded.xyz/static/il2missionplanner.json",
-	"virtualpilotsfi": "http://ts3.virtualpilots.fi/output.json",
+	"virtualpilotsfi": "http://stats.virtualpilots.fi:8000/static/output.json",
+	"coconutexpert":   "http://coconutside.eu:8083/campaign/Expert",
+	"coconutnormal":   "http://coconutside.eu:8083/campaign/Normal",
+	"obt":             "http://obt.myddns.me:8083/campaign/Open-Bar-Team",
+	"taw":             "http://taw-server.de/map/taw_map.json",
+	"combatbox":       "http://combatbox.net/static/current-map.json",
 }
 
 type Config struct {
