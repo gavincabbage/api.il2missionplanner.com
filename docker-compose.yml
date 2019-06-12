@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  api:
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      - DATABASE_URL=postgres://testuser:testpassword@postgres/test?sslmode=disable
+      - API_PORT=8080
+      - API_PPROF_PORT=6060
+    depends_on:
+      - postgres
+
+  postgres:
+    image: healthcheck/postgres
+    environment:
+      - POSTGRES_DB=testuser
+      - POSTGRES_PASSWORD=testpassword
